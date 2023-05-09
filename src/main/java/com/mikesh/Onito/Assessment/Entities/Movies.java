@@ -17,5 +17,4 @@ public class Movies {
     private String primaryTitle;
     private int runtimeMinutes;
     private String genres;
-
 }

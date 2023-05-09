@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,26 +14,36 @@ import java.util.List;
 
 public class ExcelHelper {
 
+    public static boolean checkExcelFormat(MultipartFile file) {
+
+        String contentType = file.getContentType();
+
+        if (contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public static List<Movies> convertExcelToList (InputStream inputStream){
         List<Movies> moviesList = new ArrayList<>();
 
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
             XSSFSheet sheet = workbook.getSheet("movies");
 
             int rownumber = 0;
 
-            Iterator<Row> iterable = sheet.iterator();
+            Iterator<Row> rowIterator = sheet.iterator();
 
-            while (iterable.hasNext()){
-                Row row = iterable.next();
-
+            while (rowIterator.hasNext()){
+                Row row = rowIterator.next();
                 if(rownumber ==0){
                     rownumber++;
                     continue;
                 }
-
                 Iterator<Cell> cells = row.iterator();
                 int cellid = 0;
                 Movies movies1 = new Movies();
