@@ -4,22 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Movies {
+@ToString
+public class Ratings {
+
     @Id
     private String tconst;
-    @JsonIgnore
-    private String titleType;
-    private String primaryTitle;
-    private int runtimeMinutes;
-    private String genres;
+    private double averageRating;
+    private int numVotes;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "movies")
-    private Ratings ratings;
+    @OneToOne
+    @JoinColumn(name = "tconst", referencedColumnName = "tconst")
+    private Movies movies;
 }

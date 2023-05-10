@@ -5,37 +5,20 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ExcelHelper {
-
-    public static boolean checkExcelFormat(MultipartFile file) {
-
-        String contentType = file.getContentType();
-
-        if (contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
+public class MoviesExcelHelper {
     public static List<Movies> convertExcelToList (InputStream inputStream){
         List<Movies> moviesList = new ArrayList<>();
 
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-
             XSSFSheet sheet = workbook.getSheet("movies");
-
             int rownumber = 0;
-
             Iterator<Row> rowIterator = sheet.iterator();
 
             while (rowIterator.hasNext()){
@@ -63,7 +46,6 @@ public class ExcelHelper {
         } catch (Exception e){
             e.printStackTrace();
         }
-
         return moviesList;
     }
 }
