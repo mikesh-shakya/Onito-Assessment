@@ -81,22 +81,23 @@ public class MoviesService {
 
         List<Object[]> result = this.moviesRepo.findAllMoviesWithSubtotals();
         List<Object[]> genreTotals = this.moviesRepo.getGenreTotals();
-//        for (Object[] row : result) {
-//            String genre = (String) row[0];
-//            long totalVotes = 0;
-//            for (Object[] totalRow : genreTotals) {
-//                if (genre.equals(totalRow[0])) {
-//                    totalVotes = (long) totalRow[1];
-//                    break;
-//                }
-//            }
-//            row[2] = totalVotes;
-//        }
 
-
+        for(Object[] row : genreTotals){
+            String genre = (String) row[0];
+            List<Object[]> movi = new ArrayList<>();
+            for(Object[] mov : result){
+                if(genre.equals(mov[0])){
+                    Object[] obj = new Object[2];
+                    obj[0] = mov[1];
+                    obj[1] = mov[3];
+                    movi.add(obj);
+                }
+            }
+            row[2] = movi;
+        }
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(result);
+        String json = mapper.writeValueAsString(genreTotals);
         return json;
     }
 

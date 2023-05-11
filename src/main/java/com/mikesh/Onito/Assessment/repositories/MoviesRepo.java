@@ -20,10 +20,10 @@ public interface MoviesRepo extends JpaRepository<Movies, String> {
     List<Object[]> findAllMoviesWithSubtotals();
 
 
-    @Query(value = "SELECT m.genres, SUM(r.num_votes) AS total_votes " +
+    @Query(value = "SELECT m.genres, SUM(r.num_votes) AS total_votes, COUNT(*) AS numMovies " +
             "FROM movies m INNER JOIN ratings r ON m.tconst = r.tconst " +
             "GROUP BY m.genres " +
-            "ORDER BY total_votes DESC", nativeQuery = true)
+            "ORDER BY m.genres", nativeQuery = true)
     List<Object[]> getGenreTotals();
 
     @Modifying
