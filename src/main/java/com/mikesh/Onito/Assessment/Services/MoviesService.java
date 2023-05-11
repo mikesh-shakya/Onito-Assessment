@@ -62,18 +62,6 @@ public class MoviesService {
                                         .filter(movie -> movie.getRatings().getAverageRating() > 6.0)
                                         .sorted(Comparator.comparing(movies -> movies.getRatings().getAverageRating()))
                                         .toList();
-
-//        List<Map<String, Object>> output = topratedmovies.stream()
-//                .map(movie -> {
-//                    Map<String, Object> map = new LinkedHashMap<>();
-//                    map.put("tconst", movie.getTconst());
-//                    map.put("primaryTitle", movie.getPrimaryTitle());
-//                    map.put("genre", movie.getGenres());
-//                    map.put("averageRating", movie.getRatings().getAverageRating());
-//                    return map;
-//                })
-//                .collect(Collectors.toList());
-
         return topratedmovies;
     }
 
@@ -97,8 +85,7 @@ public class MoviesService {
         }
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(genreTotals);
-        return json;
+        return mapper.writeValueAsString(genreTotals);
     }
 
     public void updateRunTime() {

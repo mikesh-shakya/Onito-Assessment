@@ -17,22 +17,20 @@ import java.util.Map;
 @RestController
 @CrossOrigin("*")
 public class DataMergeController {
-
     @Autowired
     private MoviesService moviesService;
-
     @Autowired
     private RatingRepo ratingRepo;
 
     @PostMapping("/movie/upload")
     public ResponseEntity<?> movieupload(@RequestParam("file") MultipartFile file){
         this.moviesService.saveMovieListToDatabase(file);
-        return ResponseEntity.ok(Map.of("message", "File has been uploaded successfully."));
+        return ResponseEntity.ok(Map.of("message", "Movie File has been uploaded successfully."));
     }
     @PostMapping("/rating/upload")
     public ResponseEntity<?> ratingupload(@RequestParam("file") MultipartFile file){
         this.moviesService.saveRatingListToDatabase(file);
-        return ResponseEntity.ok(Map.of("message", "File has been uploaded successfully."));
+        return ResponseEntity.ok(Map.of("message", "Rating File has been uploaded successfully."));
     }
     @GetMapping("/allmovies")
     public List<Movies> getAllMovies(){
