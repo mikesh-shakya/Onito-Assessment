@@ -1,11 +1,13 @@
 package com.mikesh.Onito.Assessment.Controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mikesh.Onito.Assessment.Entities.Movies;
 import com.mikesh.Onito.Assessment.Entities.Ratings;
 import com.mikesh.Onito.Assessment.Services.MoviesService;
 import com.mikesh.Onito.Assessment.repositories.RatingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,13 +56,13 @@ public class DataMergeController {
     }
 
     @GetMapping("/api/v1/top-rated-movies")
-    public  List<Map<String, Object>> topRatedMovies(){
+    public  List<Movies> topRatedMovies(){
         return moviesService.topRatedMovies();
     }
 
     @GetMapping("/api/v1/genre-movies-with-subtotals")
-    public List<Movies> genreMovieswithSubs(){
-        return moviesService.genreMovieWithSubtotals();
+    public ResponseEntity<?> genreMovieswithSubs() throws JsonProcessingException {
+        return ResponseEntity.ok(moviesService.genreMovieWithSubtotals());
     }
 
     @PostMapping("/api/v1/update-runtime-minutes")

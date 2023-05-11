@@ -1,5 +1,7 @@
 package com.mikesh.Onito.Assessment.Services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mikesh.Onito.Assessment.Entities.Movies;
 import com.mikesh.Onito.Assessment.Entities.Ratings;
 import com.mikesh.Onito.Assessment.Helper.MoviesExcelHelper;
@@ -7,6 +9,8 @@ import com.mikesh.Onito.Assessment.Helper.RatingExcelHelper;
 import com.mikesh.Onito.Assessment.repositories.MoviesRepo;
 import com.mikesh.Onito.Assessment.repositories.RatingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,28 +57,47 @@ public class MoviesService {
         this.moviesRepo.save(movie);
     }
 
-    public  List<Map<String, Object>> topRatedMovies() {
+    public  List<Movies> topRatedMovies() {
         List<Movies> topratedmovies = this.moviesRepo.findAll().stream()
                                         .filter(movie -> movie.getRatings().getAverageRating() > 6.0)
                                         .sorted(Comparator.comparing(movies -> movies.getRatings().getAverageRating()))
                                         .toList();
 
-        List<Map<String, Object>> output = topratedmovies.stream()
-                .map(movie -> {
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    map.put("tconst", movie.getTconst());
-                    map.put("primaryTitle", movie.getPrimaryTitle());
-                    map.put("genre", movie.getGenres());
-                    map.put("averageRating", movie.getRatings().getAverageRating());
-                    return map;
-                })
-                .collect(Collectors.toList());
+//        List<Map<String, Object>> output = topratedmovies.stream()
+//                .map(movie -> {
+//                    Map<String, Object> map = new LinkedHashMap<>();
+//                    map.put("tconst", movie.getTconst());
+//                    map.put("primaryTitle", movie.getPrimaryTitle());
+//                    map.put("genre", movie.getGenres());
+//                    map.put("averageRating", movie.getRatings().getAverageRating());
+//                    return map;
+//                })
+//                .collect(Collectors.toList());
 
-        return output;
+        return topratedmovies;
     }
 
-    public List<Movies> genreMovieWithSubtotals() {
-        return this.moviesRepo.findAllMoviesWithSubtotals();
+    public String genreMovieWithSubtotals() throws JsonProcessingException {
+
+        List<Object[]> result = this.moviesRepo.findAllMoviesWithSubtotals();
+        List<Object[]> genreTotals = this.moviesRepo.getGenreTotals();
+//        for (Object[] row : result) {
+//            String genre = (String) row[0];
+//            long totalVotes = 0;
+//            for (Object[] totalRow : genreTotals) {
+//                if (genre.equals(totalRow[0])) {
+//                    totalVotes = (long) totalRow[1];
+//                    break;
+//                }
+//            }
+//            row[2] = totalVotes;
+//        }
+
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(result);
+        return json;
     }
 
     public void updateRunTime() {

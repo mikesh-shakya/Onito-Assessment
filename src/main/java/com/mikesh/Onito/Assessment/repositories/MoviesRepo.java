@@ -12,12 +12,19 @@ import java.util.List;
 @Repository
 public interface MoviesRepo extends JpaRepository<Movies, String> {
 
-    @Query(value = "SELECT m.*, SUM(r.num_votes) AS total_votes " +
+    @Query(value = "SELECT m.genres, m.primary_title, m.tconst, SUM(r.num_votes) AS total_votes " +
             "FROM movies m " +
-            "INNER JOIN ratings r ON m.tconst = r.tconst " +
+            "LEFT JOIN ratings r ON m.tconst = r.tconst " +
             "GROUP BY m.genres, m.tconst " +
             "ORDER BY m.genres, total_votes DESC ", nativeQuery = true)
-    List<Movies> findAllMoviesWithSubtotals();
+    List<Object[]> findAllMoviesWithSubtotals();
+
+
+    @Query(value = "SELECT m.genres, SUM(r.num_votes) AS total_votes " +
+            "FROM movies m INNER JOIN ratings r ON m.tconst = r.tconst " +
+            "GROUP BY m.genres " +
+            "ORDER BY total_votes DESC", nativeQuery = true)
+    List<Object[]> getGenreTotals();
 
     @Modifying
     @Transactional
